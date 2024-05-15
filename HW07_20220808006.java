@@ -55,8 +55,86 @@ interface Wrappable extends Sellable {
 
 }
 
-class Box<T extends Sellable> {
+class Box<T extends Sellable> implements Package<T> {
+    private int distanceToAddress;
+    private T item;
+    private boolean seal;
 
+    public Box() {
+        item = null;
+        seal = false;
+        distanceToAddress = 0;
+    }
+
+    public Box(T item, int distanceToAddress) {
+        this.item = item;
+        this.distanceToAddress = distanceToAddress;
+        this.seal = true; // box is sealed __ paketlendi gibi düşün
+    }
+
+    public T extract() { // extract item and return it
+        if (this.seal == true && this.item != null) { // f-f t-f?
+            T outItem = this.item;
+            this.item = null;
+            this.seal = false;
+            return outItem;
+        } else {
+            return null;
+        }
+    }
+
+    public boolean isEmpty() {
+        if (this.item == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean pack(T item) {
+        if (this.item == null) {
+            this.item = item;
+            this.seal = true;
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public boolean isSealBroken() {
+        if (seal == false) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public double getPriority() {
+        double priority = item.getPrice() / distanceToAddress;
+        return priority;
+    }
+
+    @Override
+    public String toString() {
+        if (isEmpty()) {
+            if (isSealBroken()) {
+                String s1 = "box status: There is nothing in the box \n seal status: The seal is broken ";
+                return s1;
+            } else {
+                String s2 = "box status: There is nothing in the box \n seal status: The seal is not broken ";
+                return s2;
+            }
+        } else {
+            if (isSealBroken()) {
+                String s3 = this.item.toString() + "\nseal status: The seal is broken ";
+                return s3;
+            } else {
+                String s4 = this.item.toString() + "\nseal status: The seal is not broken ";
+                return s4;
+            }
+        }
+    }
 }
 
 class CargoCompany {
